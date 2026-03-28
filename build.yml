@@ -1,0 +1,113 @@
+name: Build and Publish Flatpak
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'dev.boxxy.BoxxyTerminal.yml'
+      - 'cargo-sources.json'
+      - '.github/workflows/build.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: bitnami/minideb:latest
+      options: --privileged
+
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          apt-get update -y
+          apt-get install -y \
+            flatpak \
+            flatpak-builder \
+            git \
+            ostree \
+            curl \
+            ca-certificates \
+            gnupg
+
+      - name: Import GPG private key
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+          # Verify it imported correctly
+          gpg --list-secret-keys
+
+      - name: Restore existing repo from boxxyhub branch
+        run: |
+          git fetch origin boxxyhub 2>/dev/null || true
+          if git show-ref --verify refs/remotes/origin/boxxyhub 2>/dev/null; then
+            git checkout origin/boxxyhub -- repo 2>/dev/null || true
+            echo "Restored existing repo from boxxyhub"
+          else
+            echo "No existing boxxyhub branch found, starting fresh"
+          fi
+
+      - name: Add Flathub remote (for runtime/SDK)
+        run: |
+          flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+      - name: Install runtime and SDK
+        run: |
+          flatpak install -y --noninteractive flathub \
+            org.gnome.Platform//50 \
+            org.gnome.Sdk//50 \
+            org.freedesktop.Sdk.Extension.rust-stable//24.08
+
+      - name: Build Flatpak
+        run: |
+          flatpak-builder \
+            --force-clean \
+            --repo=repo \
+            --gpg-sign=${{ secrets.GPG_KEY_ID }} \
+            --install-deps-from=flathub \
+            --default-branch=stable \
+            builddir \
+            dev.boxxy.BoxxyTerminal.yml
+
+      - name: Update repo summary and prune to last 4 releases
+        run: |
+          flatpak build-update-repo \
+            --gpg-sign=${{ secrets.GPG_KEY_ID }} \
+            --prune \
+            --prune-depth=4 \
+            repo
+
+      - name: Publish to boxxyhub branch
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+          mkdir -p /tmp/boxxyhub
+          cd /tmp/boxxyhub
+          git init
+          git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+
+          cp -r "$GITHUB_WORKSPACE/repo" ./repo
+
+          # Copy the public GPG key so users can download it directly
+          cp "$GITHUB_WORKSPACE/boxxy.gpg" ./boxxy.gpg
+
+          cat > index.html << 'EOF'
+          <html>
+          <body>
+            <h2>Boxxy Flatpak Remote</h2>
+            <p>Add the remote:</p>
+            <pre>flatpak remote-add --user --if-not-exists --gpg-import=boxxy.gpg boxxy https://miifrommera.github.io/boxxy-flatpak-remote/repo</pre>
+            <p>Install:</p>
+            <pre>flatpak install --user boxxy dev.boxxy.BoxxyTerminal</pre>
+            <p>Download GPG key: <a href="boxxy.gpg">boxxy.gpg</a></p>
+          </body>
+          </html>
+          EOF
+
+          git add -A
+          git commit -m "Deploy flatpak repo [$(date -u '+%Y-%m-%d %H:%M:%S')]"
+          git push --force origin HEAD:boxxyhub
