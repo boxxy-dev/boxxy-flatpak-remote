@@ -35,22 +35,13 @@ jobs:
             pinentry-curses
 
       - name: Import GPG private key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Export public key to workspace
         run: |
-          mkdir -p ~/.gnupg && chmod 700 ~/.gnupg
-          # Allow loopback pinentry so gpg works non-interactively in CI
-          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
-          chmod 600 ~/.gnupg/gpg-agent.conf
-          gpgconf --kill gpg-agent || true
-          # Import — supports both passphrase-protected and unprotected keys
-          if [ -z "${{ secrets.GPG_PASSPHRASE }}" ]; then
-            echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
-          else
-            echo "${{ secrets.GPG_PRIVATE_KEY }}" | \
-              gpg --batch --yes --pinentry-mode loopback \
-                  --passphrase "${{ secrets.GPG_PASSPHRASE }}" --import
-          fi
-          gpg --list-secret-keys --keyid-format LONG
-          # Export public key in case it's not already in the workspace
           gpg --armor --export "${{ secrets.GPG_KEY_ID }}" > "$GITHUB_WORKSPACE/boxxy.gpg"
 
       - name: Restore existing repo from boxxyhub branch
@@ -105,8 +96,6 @@ jobs:
           git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
 
           cp -r "$GITHUB_WORKSPACE/repo" ./repo
-
-          # Copy the public GPG key so users can download it directly
           cp "$GITHUB_WORKSPACE/boxxy.gpg" ./boxxy.gpg
 
           cat > index.html << 'EOF'
@@ -123,6 +112,5 @@ jobs:
           EOF
 
           git add -A
-          # --no-gpg-sign so git doesn't try to invoke gpg for the commit itself
           git commit --no-gpg-sign -m "Deploy flatpak repo [$(date -u '+%Y-%m-%d %H:%M:%S')]"
           git push --force origin HEAD:boxxyhub
