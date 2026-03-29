@@ -80,19 +80,6 @@
     {
         "type": "archive",
         "archive-type": "tar-gzip",
-        "url": "https://static.crates.io/crates/anstream/anstream-0.6.21.crate",
-        "sha256": "43d5b281e737544384e969a5ccad3f1cdd24b48086a0fc1b2a5262a26b8f4f4a",
-        "dest": "cargo/vendor/anstream-0.6.21"
-    },
-    {
-        "type": "inline",
-        "contents": "{\"package\": \"43d5b281e737544384e969a5ccad3f1cdd24b48086a0fc1b2a5262a26b8f4f4a\", \"files\": {}}",
-        "dest": "cargo/vendor/anstream-0.6.21",
-        "dest-filename": ".cargo-checksum.json"
-    },
-    {
-        "type": "archive",
-        "archive-type": "tar-gzip",
         "url": "https://static.crates.io/crates/anstream/anstream-1.0.0.crate",
         "sha256": "824a212faf96e9acacdbd09febd34438f8f711fb84e09a8916013cd7815ca28d",
         "dest": "cargo/vendor/anstream-1.0.0"
@@ -114,19 +101,6 @@
         "type": "inline",
         "contents": "{\"package\": \"940b3a0ca603d1eade50a4846a2afffd5ef57a9feac2c0e2ec2e14f9ead76000\", \"files\": {}}",
         "dest": "cargo/vendor/anstyle-1.0.14",
-        "dest-filename": ".cargo-checksum.json"
-    },
-    {
-        "type": "archive",
-        "archive-type": "tar-gzip",
-        "url": "https://static.crates.io/crates/anstyle-parse/anstyle-parse-0.2.7.crate",
-        "sha256": "4e7644824f0aa2c7b9384579234ef10eb7efb6a0deb83f9630a49594dd9c15c2",
-        "dest": "cargo/vendor/anstyle-parse-0.2.7"
-    },
-    {
-        "type": "inline",
-        "contents": "{\"package\": \"4e7644824f0aa2c7b9384579234ef10eb7efb6a0deb83f9630a49594dd9c15c2\", \"files\": {}}",
-        "dest": "cargo/vendor/anstyle-parse-0.2.7",
         "dest-filename": ".cargo-checksum.json"
     },
     {
@@ -1614,14 +1588,14 @@
     {
         "type": "archive",
         "archive-type": "tar-gzip",
-        "url": "https://static.crates.io/crates/env_logger/env_logger-0.11.9.crate",
-        "sha256": "b2daee4ea451f429a58296525ddf28b45a3b64f1acf6587e2067437bb11e218d",
-        "dest": "cargo/vendor/env_logger-0.11.9"
+        "url": "https://static.crates.io/crates/env_logger/env_logger-0.11.10.crate",
+        "sha256": "0621c04f2196ac3f488dd583365b9c09be011a4ab8b9f37248ffcc8f6198b56a",
+        "dest": "cargo/vendor/env_logger-0.11.10"
     },
     {
         "type": "inline",
-        "contents": "{\"package\": \"b2daee4ea451f429a58296525ddf28b45a3b64f1acf6587e2067437bb11e218d\", \"files\": {}}",
-        "dest": "cargo/vendor/env_logger-0.11.9",
+        "contents": "{\"package\": \"0621c04f2196ac3f488dd583365b9c09be011a4ab8b9f37248ffcc8f6198b56a\", \"files\": {}}",
+        "dest": "cargo/vendor/env_logger-0.11.10",
         "dest-filename": ".cargo-checksum.json"
     },
     {
