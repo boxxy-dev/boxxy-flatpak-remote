@@ -32,7 +32,8 @@ jobs:
             gnupg \
             pinentry-curses \
             python3 \
-            python3-pip
+            python3-pip \
+            python3-venv
 
       - name: Import GPG private key
         uses: crazy-max/ghaction-import-gpg@v6
@@ -60,10 +61,11 @@ jobs:
 
       - name: Generate cargo sources
         run: |
-          pip3 install --quiet aiohttp PyYAML tomlkit
+          python3 -m venv .venv
+          .venv/bin/pip install --no-cache-dir --quiet aiohttp PyYAML tomlkit
           COMMIT=$(grep 'commit:' dev.boxxy.BoxxyTerminal.yml | awk '{print $2}')
           curl -sL "https://raw.githubusercontent.com/miifrommera/boxxy/${COMMIT}/Cargo.lock" -o /tmp/Cargo.lock
-          python3 flatpak-cargo-generator.py /tmp/Cargo.lock -o generated-sources.json
+          .venv/bin/python3 flatpak-cargo-generator.py /tmp/Cargo.lock -o generated-sources.json
 
       - name: Install runtime and SDK
         run: |
