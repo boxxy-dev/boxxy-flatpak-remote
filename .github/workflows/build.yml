@@ -88,6 +88,7 @@ jobs:
       - name: Update repo summary and prune to last 4 releases
         run: |
           flatpak build-update-repo \
+            --redirect-url=https://boxxy-dev.github.io/boxxy-flatpak-remote/repo \
             --gpg-sign=${{ secrets.GPG_KEY_ID }} \
             --prune \
             --prune-depth=4 \
@@ -112,7 +113,7 @@ jobs:
           <body>
             <h2>Boxxy Flatpak Remote</h2>
             <p>Add the remote:</p>
-            <pre>flatpak remote-add --user --if-not-exists --gpg-import=boxxy.gpg boxxy https://miifrommera.github.io/boxxy-flatpak-remote/repo</pre>
+            <pre>flatpak remote-add --user --if-not-exists --gpg-import=boxxy.gpg boxxy https://boxxy-dev.github.io/boxxy-flatpak-remote/repo</pre>
             <p>Install:</p>
             <pre>flatpak install --user boxxy dev.boxxy.BoxxyTerminal</pre>
             <p>Download GPG key: <a href="boxxy.gpg">boxxy.gpg</a></p>

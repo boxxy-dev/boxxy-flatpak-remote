@@ -3,8 +3,8 @@ Flatpak remote for Boxxy since Flathub submission was [closed](https://github.co
 
 ## Install
 ```
-curl -O https://miifrommera.github.io/boxxy-flatpak-remote/boxxy.gpg && \
+curl -O https://boxxy-dev.github.io/boxxy-flatpak-remote/boxxy.gpg && \
   flatpak remote-add --user --if-not-exists --gpg-import=boxxy.gpg \
-  boxxy https://miifrommera.github.io/boxxy-flatpak-remote/repo && \
+  boxxy https://boxxy-dev.github.io/boxxy-flatpak-remote/repo && \
   flatpak install --user boxxy dev.boxxy.BoxxyTerminal
 ```
