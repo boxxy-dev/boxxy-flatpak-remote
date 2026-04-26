@@ -37,5 +37,5 @@ modules:
       sources:
           - type: git
             url: https://github.com/miifrommera/boxxy
-            commit: c8818c6282d3cec6602995eb141f7b00ba7a7b38
+            commit: 7934b3c93ee58110c44a2d3c1937fd9bfa9586fa
           - generated-sources.json
