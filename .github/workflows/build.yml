@@ -64,7 +64,7 @@ jobs:
           python3 -m venv .venv
           .venv/bin/pip install --no-cache-dir --quiet aiohttp PyYAML tomlkit
           COMMIT=$(grep 'commit:' dev.boxxy.BoxxyTerminal.yml | awk '{print $2}')
-          curl -sL "https://raw.githubusercontent.com/miifrommera/boxxy/${COMMIT}/Cargo.lock" -o /tmp/Cargo.lock
+          curl -sL "https://raw.githubusercontent.com/boxxy-dev/boxxy/${COMMIT}/Cargo.lock" -o /tmp/Cargo.lock
           .venv/bin/python3 flatpak-cargo-generator.py /tmp/Cargo.lock -o generated-sources.json
 
       - name: Install runtime and SDK
