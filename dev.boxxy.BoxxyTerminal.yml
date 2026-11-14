@@ -37,5 +37,5 @@ modules:
       sources:
           - type: git
             url: https://github.com/boxxy-dev/boxxy
-            commit: 9fdf60c735dfb3fb1f9a5b179368a9bbbc4087f9
+            commit: 66ac30239ec4212198d5956663ff07b4917d36dc
           - generated-sources.json
